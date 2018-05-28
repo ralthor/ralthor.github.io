@@ -11,7 +11,7 @@ var CROSSOVER_PROBABILITY;
 var MUTATION_PROBABILITY;
 var OX_CROSSOVER_RATE;
 var UNCHANGED_GENS;
-var SALES_MEN;
+var SALES_MEN = 1;
 
 var mutationTimes;
 var dis;
@@ -29,6 +29,16 @@ $(function() {
   points = data200;
   $('#addRandom_btn').click(function() {
     addRandomPoints(50);
+    $('#status').text("");
+    running = false;
+  });
+  $('#addSalesman_btn').click(function() {
+    SALES_MEN++;
+    $('#status').text("");
+    running = false;
+  });
+  $('#removeSalesman_btn').click(function() {
+    SALES_MEN -= SALES_MEN > 1 ? 1 : 0;
     $('#status').text("");
     running = false;
   });
@@ -90,7 +100,6 @@ function initData() {
   mutationTimes = 0;
   doPreciseMutate = true;
 
-  SALES_MEN = 2;
   bestValue = undefined;
   best = [];
   currentGeneration = 0;
@@ -135,12 +144,15 @@ function drawLines(array) {
 function draw() {
   if(running) {
     GANextGeneration();
-    $('#status').text("There are " + points.length + " cities in the map, "
-                      +"the " + currentGeneration + "th generation with "
+    $('#status').text("There are " + points.length + " cities in the map with "
+                      + SALES_MEN + (SALES_MEN == 1 ? " Salesman" : " Salesmen")
+                      +", the " + currentGeneration + "th generation with "
                       + mutationTimes + " times of mutation. best value: "
                       + ~~(bestValue));
   } else {
-    $('#status').text("There are " + points.length + " Cities in the map. ")
+    $('#status').text("There are " + points.length + " Cities in the map with "
+                      + SALES_MEN
+                      + (SALES_MEN == 1 ? " Salesman" : " Salesmen."));
   }
   clearCanvas();
   if (points.length > 0) {

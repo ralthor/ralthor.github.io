@@ -189,7 +189,9 @@ function wheelOut(rand) {
   }
 }
 function randomIndivial(n) {
-  var a = [0];
+  var a = [];
+  for(var i=1; i<SALES_MEN; i++)
+	a.push(0);
   for(var i=0; i<n; i++) {
     a.push(i);
   }
