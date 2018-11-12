@@ -1,0 +1,95 @@
+.<!DOCTYPE html>
+<html>
+<head>
+<script>
+var keepTrack = false;
+var colors = ['#397FD0', '#E1600F', '#800080', '#008000', '#775B5B', '#DB35CA', '#BB002B', '#0C986F', '#479B47', '#7BB42B', '#90901D'];
+var inp;
+var out;
+
+function pr(str)
+{
+	out.value += str + "\n";
+}
+
+function myLoad()
+{
+	out = document.getElementById("out");
+}
+	
+function draw()
+{
+	inp = document.getElementById("ta").value;
+	out.value = "";
+	
+	var whole = inp.split("|");
+	var names = whole[0].split(",");
+
+	
+	var maxw = 0;
+	var maxb = 0;
+	for(var i = 1; i < whole.length; i++)
+	{
+		var row = whole[i].split(",");
+		var w = parseFloat(row[0]);
+		w = Math.sqrt(w);
+		maxw = maxw < w? w: maxw;
+		for(var j = 1; j < row.length/2; j++)
+		{
+			var bw = parseFloat(row[j + parseInt(row.length/2)]);
+			maxb = maxb < bw? bw: maxb;
+		}
+	}
+	
+	pr("digraph " + names[0] + " {");
+	pr("  node [style=filled, shape=circle];")
+	for(var i = 1; i < whole.length; i++)
+	{
+		var row = whole[i].split(",");
+		var w = parseFloat(row[0]);
+		w = Math.sqrt(w) / maxw * 2;
+		pr("  " + i + " [label=\"\",height=" + w + "];")
+		for(var j = 1; j < row.length/2; j++)
+		{
+			var bw = parseFloat(row[j + parseInt(row.length/2)]) / maxb * 5.5 + 0.5;
+			pr("  " + i + "->" + row[j].trim() + " [penwidth=" + bw + "];");
+		}
+	}
+	pr("}");
+}
+
+</script>
+</head>
+<body onload='myLoad();'>
+<h1>Workflow to dot converter</h1>
+<p>This javascript tool converts the workflows stored in txt files, which is a non-standard text format, to dot format.
+dot format can be visualized using several online tools, for example using this link: </p>
+
+<a href='https://dreampuf.github.io/GraphvizOnline/'>https://dreampuf.github.io/GraphvizOnline/</a>
+
+<p>In order to use this tool, select a workflow text file (eg. M.txt), and copy one line of that (which represents a workflow) into the first text-box below.
+Then using <button onclick='draw()'>Convert</button>, the second text-box is filled with the dot format of the workflow.
+Copy the text and visualize it using the link above.
+It shows what was the shape of the workflow.</p>
+
+<h2>Workflow</h2>
+<p>A workflow is an application which consists of loosly coupled tasks.
+It means that the tasks have no interaction while they are executing, and they only use/produce the other task's data.
+The whole workflow is represented by a directed acyclic graph (DAG) in which tasks and data-dependencies are presented with nodes and edges, respectively.
+Size of the edges and the nodes in the output change based on the data volume and the execution time of the workflow.
+Since the square root of the execution times are considered as the diameters of the circles representing nodes, the execution time is related linearly with the surface are of them.</p>
+<br/><br/>
+<h2>Convert</h2>
+<h3>Copy the text workflow here:</h3>
+<textarea id='ta' rows="20" cols="50">
+Mine_10,   11,   12|    8, 4, 4000|   12, 5, 6, 5000, 2000|    6, 5, 3000|    7, 6, 7, 2000, 3000|   15, 8, 6000|    9, 9, 7000|    4, 9, 5000|    2, 9, 1000|    6, 12, 0|    5, 1, 2, 3, 7000, 5000, 3000|    0, 10, 0|    0
+</textarea>
+<br/><button onclick='draw()'>Convert</button>
+<h3>The converted dot format is here:</h3>
+<textarea id='out' rows="20" cols="50">
+</textarea>
+<br/><button onclick='draw()'>Convert</button>
+<button onclick='out.value = "";'>clear</button>
+<div id='logger'></div>
+</body>
+</html>
