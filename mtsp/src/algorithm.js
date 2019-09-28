@@ -191,18 +191,28 @@ function wheelOut(rand) {
 function randomIndivial(n) {
   var a = [];
   for(var i=1; i<SALES_MEN; i++)
-	a.push(0);
+	  a.push(0);
   for(var i=0; i<n; i++) {
     a.push(i);
   }
   return a.shuffle();
 }
 function evaluate(indivial) {
+  var sumForSalesman = new Array(SALES_MEN).fill(0);
+  var currentSalesmanIndex = 0;
   var sum = dis[indivial[0]][indivial[indivial.length - 1]];
+  sumForSalesman[currentSalesmanIndex] = sum;
+  if(indivial[0] == 0)
+    currentSalesmanIndex = (currentSalesmanIndex + 1) % SALES_MEN;
+
   for(var i=1; i<indivial.length; i++) {
     sum += dis[indivial[i]][indivial[i-1]];
+    sumForSalesman[currentSalesmanIndex] += dis[indivial[i]][indivial[i-1]];
+    if(indivial[i] == 0)
+      currentSalesmanIndex = (currentSalesmanIndex + 1) % SALES_MEN;
   }
-  return sum;
+  var L2 = sumForSalesman.reduce((t, x) => t + x*x, 0);
+  return L2 / sum; // returns larger values for unfair distribution of distances between salesmen.
 }
 function countDistances() {
   var length = points.length;
