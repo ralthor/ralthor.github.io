@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <script src="js/main.js"></script>
+</head>
+
+<body onload="drawTable(q, 'show');">
+    <h1>Q-learning in Javascript</h1>
+    <p>
+        Use start, step and stop buttons to control the learning process.
+    </p>
+    <p>
+        When it is stoped, click to add -1, and double click to add 1.
+    </p>
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="step()">Step</button>
+    <button onclick="reset()">Reset Learning</button>
+    <button onclick="resetEnv()">Reset Environment</button>
+    <br/>
+    <input type="range" id="alpha" oninput="drawTable(q, 'show');" min="0" max="1000" value="500">
+    <span>alpha (learning rate): </span><span id='showAlpha'></span>
+    <br/>
+    <input type="range" id="epsilon" oninput="drawTable(q, 'show');" min="0" max="1000" value="50">
+    <span>epsilon (exploration rate): </span><span id='showEpsilon'></span>
+    <br/>
+    <input type="range" id="discount" oninput="drawTable(q, 'show');" min="0" max="1000" value="800">
+    <span>discount rate: </span><span id='showDiscount'></span>
+    <div id="show"></div>
+</body>
+
+</html>

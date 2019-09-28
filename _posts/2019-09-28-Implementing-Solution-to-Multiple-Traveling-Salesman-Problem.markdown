@@ -11,6 +11,9 @@ I changed parano's solution, to work for Multiple TSP (MTSP), in which there are
 
 ## Multiple salesmen? It is easy!
 
+<a href="/mtsp"><img src="/images/threeSalesmen.png" /></a>
+
+
 Two easy steps I took to change the base code from TSP to MTSP solver:
 
 ### 1. Added source nodes for each salesman
