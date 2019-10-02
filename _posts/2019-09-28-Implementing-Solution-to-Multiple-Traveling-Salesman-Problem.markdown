@@ -15,17 +15,15 @@ Traveling Salesman Problem (TSP) is proven to be unsolvable in polynomial time, 
 ### Genetic Algorithm
 If you are going to read the code mentioned above, it is good to know Genetic Algorithm and search for its methods inside the code.
 
+<image src="/images/ga-mutate.png"/>
+
 1. Population: in genetic algorithm, there is a pool of solutions, initialized randomly. Each solutions is called an individual, and the solution is coded inside it. In TSP, each individual is a rotating array of numbers, which shows a route between costumers. For example, `3 0 4 2 5 1` means going from `3` to `0`, then `4`, then `2` and so on. Note that it also goes from `1` to `3`, because the list is rotating. Therefore, it is equivalent with for example `2 5 1 3 0 4`.
 1. Initialization: random evaluation of the population is done here.
 1. Fitness function: since it is important to compare different solutions, a fitness functoin is defined. It accepts an individual and returns how much it feets. For TSP, it is defined as `evaluation` method, which returns the sum of the distances between the costumers. However, since it returns smaller values for better solutions, the fitness is defined as `1/evaluation`, which returns higher values as the given solution (passed individual) gets better.
 1. Crossover: combines two individuals and creates new one(s). It is one of the most important parts of a Genetic Algorithm solution, and there are several scientific papres proposing different crossovers for TSP. The one that is used in parano's code, is a simple greedy algorithm which creates two children for each pair of parents. It starts from a random starting node (costumer), and add it to the child. Then it checks the next nodes after the starting node in both parents. Next node of the child will be selected from the parent in which the next node is closer to the starting node. For example, if starting node is `7`, and the next nodes in parents are `3` and `9` respectively, if `distance(7, 3) < distance(7, 9)` then `3` will be selected, otherwise `9` will be the next node. The other child is found going to the previous node of the selected node, instead of going to the next.
 1. Natural selection: or simply parent selection, selects a pair of fit parents from the population. They will be sent to crossover to create the new generation.
-1. Mutation: to search all of the solution space, the mutation is also happen to the population. It is done with low random probabilities such as 0.01. For TSP, again several different mutations are introduced. For example, swapping two random indices in the array, or reversing a random subset of the array in place. It is shown in below image.
-1. Solve method
-Almost all of the previous methods are called in this method. It means that for a number of generations, we create new populations by using crossover and mutaion over best fit individuals. A semi-code for this method is as below:
-
-<image src="/images/ga-mutate.png"/>
-
+1. Mutation: to search all of the solution space, the mutation is also happen to the population. It is done with low random probabilities such as 0.01. For TSP, again several different mutations are introduced. For example, swapping two random indices in the array, or reversing a random subset of the array in place. It is shown in the above image.
+1. Solve method: almost all of the previous methods are called in this method. It means that for a number of generations, we create new populations by using crossover and mutaion over best fit individuals. A semi-code for this method is as below:
 
 {% highlight javascript %}
 function solve() {
