@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <title>Time Manager</title> 
+        <link rel="stylesheet" type="text/css" href="change.css">
+        <meta charset="UTF-8">  
+        <script>
+        function QueryAll() {
+        }
+
+        function convertMS( milliseconds ) {
+            var day, hour, minute, seconds;
+            seconds = Math.floor(milliseconds / 1000);
+            minute = Math.floor(seconds / 60);
+            seconds = seconds % 60;
+            hour = Math.floor(minute / 60);
+            minute = minute % 60;
+            day = Math.floor(hour / 24);
+            hour = hour % 24;
+            return {
+                day: day,
+                hour: hour,
+                minute: minute,
+                seconds: seconds
+            };
+        }
+
+        function showTime(number) {
+            let t = convertMS(number)
+            let result = "";
+            if (t.day > 1)
+                result = t.day + " days ";
+            else if (t.day == 1)
+                result = t.day + "  day ";
+            else
+                result = "      "
+            
+            result += t.hour > 9? t.hour : ("0" + t.hour);
+            result += ":";
+            result += t.minute > 9? t.minute : ("0" + t.minute);
+            result += ":";
+            result += t.seconds > 9? t.seconds : ("0" + t.seconds);
+            
+            return result;
+        }
+
+        var zip = rows=>rows[0].map((_,c)=>rows.map(row=>row[c]))
+        var activeRow = null
+
+		function addTimer(text = "dummy task") {
+			let table = document.getElementById('all');
+			let row = table.insertRow();
+            row.totalTime = 0;
+            row.myStart = 0;
+            let cell1 = row.insertCell();
+            cell1.innerHTML = showTime(0);
+            cell1.ondblclick = function() {
+                let row = this.parentElement;
+                let newText = prompt("New value", showTime(row.totalTime).trim().split(':').join(' '));
+                if (!newText)
+                    return;
+                x = newText.split(' ').map(parseFloat).reverse()
+                coefs = [1000, 60000, 3600000, 0, 24 * 3600000]
+                times = zip([x, coefs])
+                value = times.map((t)=>t[0]*t[1]).reduce((s, t)=>isNaN(t)?s:t+s, 0)
+                row.totalTime = value;
+                row.myStart = performance.now();
+            }
+
+            let cell2 = row.insertCell()
+            cell2.innerHTML = text;
+            cell2.ondblclick = function() {
+                let newText = prompt("New name", this.innerHTML);
+                if (!newText)
+                    return;
+                this.innerHTML = newText;
+            }
+            cell2.onclick = function() {
+                let row = this.parentElement;
+                row.myStart = performance.now();
+                if(activeRow != null)
+                    activeRow.cells[1].style.backgroundColor = '';
+                activeRow = row;
+                activeRow.cells[1].style.backgroundColor = 'gray';
+            }
+
+            let cell = row.insertCell()
+            cell.innerHTML = "<img src='down1.png' style='height:4%'/>"
+            cell.onclick = function() {
+                let row = this.parentElement;
+                let t = row.parentNode;
+                let index = -1;
+                for(let i = 0; i < t.rows.length; i++)
+                    if(t.rows[i] == row) {
+                        index = i;
+                        break;
+                    }
+                if(index == t.rows.length - 1)
+                    return;
+                let i = index;
+                let j = i + 1;
+                t.rows[j].parentNode.insertBefore(t.rows[i].parentNode.removeChild(t.rows[i]), t.rows[j])
+            }
+
+            cell = row.insertCell()
+            cell.innerHTML = "<img src='up1.png' style='height:4%'/>"
+            cell.onclick = function() {
+                let row = this.parentElement;
+                let t = row.parentNode;
+                let index = -1;
+                for(let i = 0; i < t.rows.length; i++)
+                    if(t.rows[i] == row) {
+                        index = i;
+                        break;
+                    }
+                if(index == 0)
+                    return;
+                let j = index;
+                let i = j - 1;
+                t.rows[j].parentNode.insertBefore(t.rows[i].parentNode.removeChild(t.rows[i]), t.rows[j])
+            }
+
+            cell = row.insertCell()
+            cell.innerHTML = "<img src='x.png' style='height:4%'/>"
+            cell.ondblclick = function() {
+                let row = this.parentElement;
+                if(row == activeRow)
+                    activeRow = null;
+                row.parentElement.removeChild(row);
+            }
+		}
+
+        function refresh() {
+            let table = document.getElementById('all');
+            let rows = table.rows;
+            if(activeRow == null)
+                return
+            activeRow.totalTime += performance.now() - activeRow.myStart;
+            activeRow.myStart = performance.now();
+            activeRow.cells[0].innerHTML = showTime(activeRow.totalTime);
+        }
+        
+        function myInit() {
+            tasks = ["work", "play around", "water & food", "my own tasks", "phd", "sleep", "family"];
+            tasks.map(addTimer);
+            setInterval(refresh, 500);
+        }
+        </script>
+    </head>
+    <body onload='myInit()'>
+    <button onclick='addTimer()'>Create</button>
+    <table id='all'></table>
+    </body>
+</html>
