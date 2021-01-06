@@ -139,9 +139,18 @@
             activeRow.myStart = performance.now();
             activeRow.cells[0].innerHTML = showTime(activeRow.totalTime);
         }
+
+        function readQueryString() {
+            queryString = window.location.search.substr(1);
+            params = queryString.split('&');
+            expandedParams = params.map(p => {return p.split('=');});
+            result = ['dummy task'];
+            expandedParams.forEach(p => {if (p[0] == 'tasks') result = p[1].split(',');})
+            return result;
+        }
         
         function myInit() {
-            tasks = ["work", "play around", "water & food", "my own tasks", "phd", "sleep", "family"];
+            tasks = readQueryString();
             tasks.map(addTimer);
             setInterval(refresh, 500);
         }
