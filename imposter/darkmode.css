@@ -1,0 +1,27 @@
+body {
+  background-color: #1a1a1a;
+  color: #f1f1f1;
+}
+
+h1 {
+  color: #f1f1f1;
+}
+
+button {
+  background-color: #333;
+  color: #f1f1f1;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4caf50;
+  color: white;
+}

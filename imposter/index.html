@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="darkmode.css" />
+    <title>Imposter Game</title>
+    <script type="text/javascript">
+      var players = [];
+      var names = [];
+      var imposter = "";
+
+      function addPlayer() {
+        var player = prompt("Enter player name:");
+        players.push(player);
+        alert(player + " has joined the game!");
+      }
+
+      function getParameterByName(name) {
+        var url = new URL(window.location.href);
+        return url.searchParams.get(name);
+      }
+
+      function addPlayers() {
+        var playerNames = getParameterByName("names");
+        if (playerNames) {
+          var nameArray = playerNames.split(",");
+          for (var i = 0; i < nameArray.length; i++) {
+            players.push(nameArray[i]);
+            alert(nameArray[i] + " has joined the game!");
+          }
+        } else {
+          var player = prompt("Enter player name:");
+          players.push(player);
+          alert(player + " has joined the game!");
+        }
+      }
+
+      function startGame() {
+        if (players.length < 3) {
+          alert("You need at least 3 players to start the game.");
+          return;
+        }
+
+        imposter = players[Math.floor(Math.random() * players.length)];
+
+        // get the names from the textarea
+        var textarea = document.getElementById("names");
+        names = textarea.value.split(",");
+
+        // Select a random name from the names array
+        var cardName = names[Math.floor(Math.random() * names.length)];
+
+        for (var i = 0; i < players.length; i++) {
+          alert("Give the control to " + players[i]);
+          if (players[i] !== imposter) {
+            alert(players[i] + ", your card name is: " + cardName);
+          } else {
+            alert(players[i] + ", you are the imposter!");
+          }
+        }
+      }
+
+      function voteImposter() {
+        var namesList =
+          "Select the index of the player you suspect is the imposter:\n";
+        for (var i = 0; i < players.length; i++) {
+          namesList += i + ": " + players[i] + "\n";
+        }
+        var index = prompt(namesList);
+        if (players[index] === imposter) {
+          alert("Congratulations! You have found the imposter!");
+        } else {
+          alert("Oops! The imposter is still among us...");
+        }
+      }
+    </script>
+  </head>
+  <body onload="addPlayers()">
+    <h1>Imposter Game</h1>
+    <button onclick="addPlayer()">Add Player</button>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="voteImposter()">Vote Imposter</button>
+    <textarea id="names" placeholder="Enter comma-separated names">
+Chair,Table,Lamp,Phone,Pen,Pencil,Book,Mug,Keyboard,Mouse,Monitor,Camera,Watch,Wallet,Keys,Television,Printer,Glasses,Bicycle,Car,Sofa,Bed,Plate,Spoon,Fork,Knife,Bottle,Can,Hat,Shoes,Bag,Backpack,Umbrella,Coat,Cat,Dog,Elephant,Lion,Tiger,Bear,Giraffe,Zebra,Monkey,Kangaroo,Alligator,Horse,Sheep,Cow,Goat,Penguin,Dolphin,Whale,Shark,Rabbit,Fox,Deer,Squirrel,Eagle,Owl,Parrot,Star,Moon,Sun,Mountain,River,Tree,Flower,Leaf,Cloud,Rain,Snow,Wind,Fire,Water,Earth,Sky,Ocean,Forest,Beach,Desert,Island,Volcano,Comet,Rainbow,Thunder,Lightning,Heart,Diamond,Circle,Square,Triangle,Spiral,Zigzag,Line,Dot,Wave,Spiral,Cylinder,Cube,Sphere
+      </textarea
+    >
+  </body>
+</html>
