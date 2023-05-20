@@ -85,7 +85,7 @@
             }
 
             let cell = row.insertCell()
-            cell.innerHTML = "<img src='down1.png' style='height:4%'/>"
+            cell.innerHTML = "<img src='down1.png' class='buttons'/>"
             cell.onclick = function() {
                 let row = this.parentElement;
                 let t = row.parentNode;
@@ -103,7 +103,7 @@
             }
 
             cell = row.insertCell()
-            cell.innerHTML = "<img src='up1.png' style='height:4%'/>"
+            cell.innerHTML = "<img src='up1.png' class='buttons'/>"
             cell.onclick = function() {
                 let row = this.parentElement;
                 let t = row.parentNode;
@@ -121,7 +121,7 @@
             }
 
             cell = row.insertCell()
-            cell.innerHTML = "<img src='x.png' style='height:4%'/>"
+            cell.innerHTML = "<img src='x.png' class='buttons'/>"
             cell.ondblclick = function() {
                 let row = this.parentElement;
                 if(row == activeRow)
@@ -139,9 +139,18 @@
             activeRow.myStart = performance.now();
             activeRow.cells[0].innerHTML = showTime(activeRow.totalTime);
         }
+
+        function readQueryString() {
+            queryString = window.location.search.substr(1);
+            params = queryString.split('&');
+            expandedParams = params.map(p => {return p.split('=');});
+            result = ['dummy task'];
+            expandedParams.forEach(p => {if (p[0] == 'tasks') result = p[1].split(',');})
+            return result;
+        }
         
         function myInit() {
-            tasks = ["work", "play around", "water & food", "my own tasks", "phd", "sleep", "family"];
+            tasks = readQueryString();
             tasks.map(addTimer);
             setInterval(refresh, 500);
         }
